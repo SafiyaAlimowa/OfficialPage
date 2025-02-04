@@ -1,0 +1,72 @@
+import flet as ft
+import requests
+
+
+def main(page: ft.Page):
+    page.tittle = "Weather"
+    page.theme_mode = 'dark'
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    greetings = ft.Column()   
+    user_data = ft.TextField(label = 'Name of city', width = 400)
+    weather_data = ft.Text('')
+    
+    
+    
+    def get_info(e):
+        if len(user_data.value)<2:
+            return
+        API ='3d9de74844d28377e81415151cbe6a66'
+        URL =f'https://api.openweathermap.org/data/2.5/weather?q={user_data.value}&appid={API}&units=metric'
+        res = requests.get(URL).json()
+        temp = res['main']['temp']
+        weather_data.value = 'Weather: ' + str(temp)
+        page.update()
+    
+                        
+
+    def change_theme():
+        page.theme_mode = 'light' if page.theme_mode == 'light' else 'dark'
+        page.update()
+    page.add(
+        ft.Row(
+            [
+            ft.IconButton(ft.icons.SUNNY, on_click=change_theme()),
+            ft.Text('Weather programm')
+            ],
+            alignment = ft.MainAxisAlignment.CENTER
+        ),
+        ft.Row([user_data], alignment = ft.MainAxisAlignment.CENTER),
+        ft.Row([weather_data], alignment = ft.MainAxisAlignment.CENTER),
+        ft.Row([ft.ElevatedButton(text='Get',on_click=get_info)], alignment = ft.MainAxisAlignment.CENTER),
+   
+        
+        
+    )
+ft.app(target = main )    
+
+# import flet as ft
+
+
+# def main(page):
+
+#     first_name = ft.Ref[ft.TextField]()
+#     last_name = ft.Ref[ft.TextField]()
+#     greetings = ft.Ref[ft.Column]()
+
+#     def btn_click(e):
+#         greetings.current.controls.append(
+#             ft.Text(f"Hello, {first_name.current.value} {last_name.current.value}!")
+#         )
+#         first_name.current.value = ""
+#         last_name.current.value = ""
+#         page.update()
+#         first_name.current.focus()
+
+#     page.add(
+#         ft.TextField(ref=first_name, label="First name", autofocus=True),
+#         ft.TextField(ref=last_name, label="Last name"),
+#         ft.ElevatedButton("Say hello!", on_click=btn_click),
+#         ft.Column(ref=greetings),
+#     )
+    
+# ft.app(target=main)
